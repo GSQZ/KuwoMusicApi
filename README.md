@@ -2,11 +2,12 @@
 
 ## 项目简介
 
-KuwoMusicApi 是一个通过传入参数 `{歌名} {歌手}` 可以直接获取某首歌曲的 URL 的 API，适用于网易云解灰等项目。这个项目使用了 Express 框架和 Axios 库。
+KuwoMusicApi 是一个通过传入参数 `{歌名} {歌手}` 可以直接获取某首歌曲的 URL 和基础信息的 API，适用于网易云解灰等项目。这个项目使用了 Express 框架和 Axios 库。
 
 ## 功能
 
-通过传入参数 `{歌名} {歌手}`，可以获取指定歌曲的 URL。
+通过传入参数 `{歌名} {歌手} {时长}`等信息，可以获取指定歌曲的 URL。  
+支持获取`standard`, `exhigh`, `lossless`, `hires`四中音质的播放 URL。
 
 ## 使用方法
 
@@ -28,23 +29,38 @@ npm start
 
 默认情况下，服务器会在端口 3005 运行。
 
-### 3. 获取歌曲 URL
-
-通过以下 URL 形式传入参数 `{歌名} {歌手}` 来获取指定歌曲的 URL：
-
-```
-http://localhost:3005/getMusicUrl?keyword=最伟大的作品 周杰伦
-```
-
-**推荐使用 `{歌名} {歌手}` 的方式传入参数，这样获取到的链接会更准确。**
-
 ## 示例
 
 假设你想获取周杰伦的歌曲《最伟大的作品》的 URL，可以这样请求：
 
+### 1. 模糊查找
 ```
-http://localhost:3005/getMusicUrl?keyword=最伟大的作品 周杰伦
+http://localhost:3005/first-geturl?keyword=最伟大的作品 周杰伦&quality=lossless
 ```
+模糊查找模式下，服务器通过用户传输的搜索关键词进行查找，并选取第一个为结果，不对结果进行验证  
+参数说明如下: 
+ - keyword: 搜索关键词，取搜索结果的第一项
+ - quality: 音质
+
+### 2. 精确查找
+```
+http://localhost:3005/precise-get?songname=最伟大的作品&artist=周杰伦&duration=244&quality=lossless
+```
+精确查找模式下，服务器会通过用户提交的数据对搜索结果进行验证。只有验证通过了才会响应播放地址。这可以解决一些情况下搜索接口胡言乱语的问题。
+参数说明如下: 
+ - songname: 歌曲名
+ - artist: 歌手名，多个歌手用`&`分割
+ - duration: （可选）歌曲时长（秒），不填时可留空，或者填写不可以被转化为Number的对象，例如`naiy`, `lodash`, `hello world`等
+ - quality: 音质
+
+### 3. id获取
+```
+http://localhost:3005/url?id=226543302&quality=lossless
+```
+如果你知道歌曲id，可以使用此模式
+参数说明如下: 
+ - id: 歌曲id
+ - quality: 音质
 
 服务器会返回该歌曲的 URL。
 
