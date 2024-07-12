@@ -44,13 +44,14 @@ http://localhost:3005/first-geturl?keyword=最伟大的作品 周杰伦&quality=
 
 ### 2. 精确查找
 ```
-http://localhost:3005/precise-get?songname=最伟大的作品&artist=周杰伦&duration=244&quality=lossless
+http://localhost:3005/precise-get?songname=最伟大的作品&artist=周杰伦&duration=244&quality=lossless&withurl=true
 ```
 精确查找模式下，服务器会通过用户提交的数据对搜索结果进行验证。只有验证通过了才会响应播放地址。这可以解决一些情况下搜索接口胡言乱语的问题。
 参数说明如下: 
  - songname: 歌曲名
  - artist: 歌手名，多个歌手用`&`分割
  - duration: （可选）歌曲时长（秒），不填时可留空，或者填写不可以被转化为Number的对象，例如`naiy`, `lodash`, `hello world`等
+ - withurl: 是否响应URL，需要填true，不响应url时`quality`参数会被抛弃
  - quality: 音质
 
 ### 3. id获取
