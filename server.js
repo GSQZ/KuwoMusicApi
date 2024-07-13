@@ -64,6 +64,8 @@ app.get('/precise-get', async (req, res) => {
     return;
   }
 
+  console.log('select song: ', select)
+
   if (req.query.withurl == 'true') {
     if (!Object.keys(select.quality).includes(req.query.quality)) {
       res.status(400).json({ msg: '歌曲无对应音质', data: { url: null, info: select } });

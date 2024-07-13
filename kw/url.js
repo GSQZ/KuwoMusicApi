@@ -2,10 +2,10 @@
 import axios from "axios";
 
 const QualityMap = {
-  standard: { br: "128kmp3", format: "mp3" },
-  exhigh: { br: "320kmp3", format: "mp3" },
-  lossless: { br: "2000kflac", format: "flac" },
-  hires: { br: "4000kflac", format: "flac" }
+  standard: { br: "", format: "mp3", bitrate: 128 }, // 经测试br写128kmp3有返回aac的可能，所以空着吧QAQ
+  exhigh: { br: "320kmp3", format: "mp3", bitrate: 320 },
+  lossless: { br: "2000kflac", format: "flac", bitrate: 2000 },
+  hires: { br: "4000kflac", format: "flac", bitrate: 4000 }
 }
 
 const handleGetMusicUrl = async (id, quality) => {
@@ -14,11 +14,11 @@ const handleGetMusicUrl = async (id, quality) => {
   quality = QualityMap[quality]
   if (!quality) quality = QualityMap.standard
   try {
-    const url = 'https://nmobi.kuwo.cn/mobi.s?f=web&type=convert_url_with_sign&source=kwplayer_ar_5.1.0.0_B_jiakong_vh.apk&br=' + quality.br + '&rid=' + id
+    const url = 'https://nmobi.kuwo.cn/mobi.s?f=web&type=convert_url_with_sign&source=kwplayer_ar_5.1.0.0_B_jiakong_vh.apk&br=' + quality.br + '&rid=' + id + '&format=' + quality.format
     // console.log(url)
     const request = await axios.post(url, { "user-agent": "okhttp/3.10.0" })
     const result = request.data
-    // console.log(result)
+    console.log('bitrate', result.data.bitrate)
     if (result.code !== 200 || !result.data || result.data.bitrate === 1) {
       return {
         msg: result.msg ? result.msg : "failed",
@@ -27,7 +27,7 @@ const handleGetMusicUrl = async (id, quality) => {
       }
     } else {
       return {
-        msg: "success",
+        msg: (result.data.bitrate == quality.bitrate) ? "success" : 'quality uatched, br=' + result.data.bitrate,
         quality: oq,
         url: result.data.url.split('?')[0]
       }
