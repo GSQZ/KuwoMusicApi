@@ -35,6 +35,7 @@ app.get('/precise-get', async (req, res) => {
 
   const searchResult = await handleMusicSearch(`${req.query.songname} ${artist}`);
 
+  // console.log(searchResult.data)
   if (!searchResult.data) {
     res.status(400).json({ msg: '歌曲未找到对应的可解灰源', data: null });
     return;
@@ -46,14 +47,18 @@ app.get('/precise-get', async (req, res) => {
     console.log(sear);
     console.log(input);
     */
-
-    if (!sear.name.startsWith(input.name)) continue;
+    let ndiffer = lodash.uniq(lodash.difference(sear.name.split(''), input.name.split('')).concat(lodash.difference(input.name.split(''), sear.name.split(''))))
+    let nadiffer_res = ndiffer.length / ((sear.name.length + input.name.length) / 2) > 0.1
+    if (!sear.name.startsWith(input.name) && !nadiffer_res) continue;
+    console.log('name pass')
 
     const searArtistList = sear.artist.split("&");
     const differ = lodash.uniq(lodash.difference(input.artistList, searArtistList).concat(lodash.difference(searArtistList, input.artistList)));
-    console.log(differ)
+    // console.log(differ)
     if (differ.length / ((input.artistList.length + searArtistList.length) / 2) > 0.5) continue;
+    console.log("artist pass")
     if (!Number.isNaN(input.duration) && Math.abs(input.duration - sear.duration) > 10) continue;
+    console.log("duration pass")
 
     select = sear;
     break;
