@@ -1,6 +1,7 @@
 // import encryptQuery from "./encrypt.js"; KuwoDES寿终正寝，我们不需要它
 import axios from "axios";
 
+const source = ''
 const QualityMap = {
   standard: { br: "", format: "mp3", bitrate: 128 }, // 经测试br写128kmp3有返回aac的可能，所以空着吧QAQ
   exhigh: { br: "320kmp3", format: "mp3", bitrate: 320 },
@@ -14,7 +15,7 @@ const handleGetMusicUrl = async (id, quality) => {
   quality = QualityMap[quality]
   if (!quality) quality = QualityMap.standard
   try {
-    const url = 'https://nmobi.kuwo.cn/mobi.s?f=web&type=convert_url_with_sign&source=kwplayer_ar_5.1.0.0_B_jiakong_vh.apk&br=' + quality.br + '&rid=' + id + '&format=' + quality.format
+    const url = 'https://nmobi.kuwo.cn/mobi.s?f=web&type=convert_url_with_sign&source=' + source + '&br=' + quality.br + '&rid=' + id + '&format=' + quality.format
     // console.log(url)
     const request = await axios.post(url, { "user-agent": "okhttp/3.10.0" })
     const result = request.data
